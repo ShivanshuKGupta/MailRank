@@ -1,20 +1,23 @@
 from selenium import webdriver
 import time
+import pandas as pd
 
 m_Options = webdriver.ChromeOptions()
 # m_Options.add_argument("--headless")
 # m_Options.add_argument("--no-sandbox")
 m_Options.add_argument(
-    "--user-data-dir=C:\\Users\\Sonu\\AppData\\Local\\Google\\Chrome\\User Data")
+    "--user-data-dir=C:\\Users\\praya\\AppData\\Local\\Google\\Chrome\\User Data")
 m_Options.add_argument("--profile-directory=Profile 1")
 m_Options.add_argument("--disable-extensions")
-driver = webdriver.Chrome(options=m_Options)
+driver = webdriver.Chrome('C:\\Users\\praya\\Downloads\\chromedriver_win32\\chromedriver.exe', options=m_Options)
 
 driver.get('http://mail.google.com')
 first_mail = driver.find_element(by="class name", value="bog")
 
 print("opening first mail...")
 first_mail.click()
+
+pd.write_csv("data.csv", ['heading', 'sender_name', 'sender_email', 'content'])
 
 while (True):
     try:
@@ -38,9 +41,13 @@ while (True):
         print(f"{sender_name=}")
         print(f"{sender_email=}")
         print(f"{div_element=}")
+        content.replace('\n', ' ')
+        content.replace('\t', ' ')
+        content.replace('\r', ' ')
         print(f"{content=}")
         print(f"{next_button=}")
         print("Clicking next button")
+        pd.write_csv("data.csv", [heading, sender_name, sender_email, content], mode='a')
         # input("Press enter to move to next email")
         next_button.click()
     except:
