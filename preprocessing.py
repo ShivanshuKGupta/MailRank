@@ -17,28 +17,23 @@ df = pd.read_csv(file_path)
 print("Original Data:")
 print(df.head())
 
-# Text Cleaning: Remove unnecessary characters, HTML tags, and special symbols
-def clean_text(text):
-    # Check for NaN values
-    if pd.isnull(text):
-        return ""
-    
-    # Remove HTML tags
-    text = BeautifulSoup(text, 'html.parser').get_text()
+# Ensure that 'target' is present in the dataframe
+if 'target' in df.columns:
+    # Text Cleaning: Remove special characters, numbers, and convert to lowercase
+    def clean_text(text):
+        # Check for NaN values
+        if pd.isnull(text):
+            return ""
+        
+        text = str(text)  # Convert to string if it's not already
+        text = re.sub(r'[^a-zA-Z\s]', '', text, re.I | re.A)  # Remove non-alphabetic characters
+        text = text.lower()  # Convert to lowercase
+        return text
 
-    # Remove non-alphabetic characters
-    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    df['target'] = df['target'].apply(clean_text)
 
-    # Convert to lowercase
-    text = text.lower()
-
-    return text
-
-# Apply text cleaning to the desired column (replace 'content' with your actual column name)
-df['content'] = df['content'].apply(clean_text)
-
-# Tokenization: Break text into words
-df['content'] = df['content'].apply(word_tokenize)
+    # Tokenization: Break text into words
+    df['target'] = df['target'].apply(word_tokenize)
 
 # Stopword Removal: Remove common words that don't contribute much to the classification
 stop_words = set(stopwords.words('english'))
@@ -46,11 +41,20 @@ stop_words = set(stopwords.words('english'))
 def remove_stopwords(tokens):
     return [word for word in tokens if word.lower() not in stop_words]
 
-df['content'] = df['content'].apply(remove_stopwords)
+    # Join the lists of tokens back into strings
+    df['target'] = df['target'].apply(lambda x: ' '.join(x))
+
+    # Apply stop words removal
+    df['target'] = df['target'].apply(remove_stopwords)
 
 # Save the preprocessed data to a new CSV file
 df.to_csv('preprocessed_data.csv', index=False)
 
-# Display the first few rows of the preprocessed dataframe
-print("\nPreprocessed Data:")
-print(df.head())
+    # Display the first few rows of the preprocessed dataframe
+    print("\nPreprocessed Text Data:")
+    print(df)
+else:
+    print("The 'target' column does not exist in the dataframe.")
+
+
+# %%
