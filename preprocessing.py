@@ -1,64 +1,56 @@
-# %%
 import pandas as pd
 import re
-from nltk.corpus import stopwords
+from bs4 import BeautifulSoup
 from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
 
-# Download NLTK resources (stopwords and punkt tokenizer)
+# Download NLTK resources (punkt tokenizer and stopwords)
 import nltk
-nltk.download('stopwords')
 nltk.download('punkt')
+nltk.download('stopwords')
 
 # Load your CSV file
 file_path = 'data.csv'
 df = pd.read_csv(file_path)
 
-# Display the column names in the dataframe
-print("Column Names:")
-print(df.columns)
-
 # Display the first few rows of the dataframe to understand the structure of the data
-print("\nOriginal Data:")
+print("Original Data:")
 print(df.head())
 
-# Ensure that 'target' is present in the dataframe
-if 'target' in df.columns:
-    # Text Cleaning: Remove special characters, numbers, and convert to lowercase
-    def clean_text(text):
-        # Check for NaN values
-        if pd.isnull(text):
-            return ""
-        
-        text = str(text)  # Convert to string if it's not already
-        text = re.sub(r'[^a-zA-Z\s]', '', text, re.I | re.A)  # Remove non-alphabetic characters
-        text = text.lower()  # Convert to lowercase
-        return text
+# Text Cleaning: Remove unnecessary characters, HTML tags, and special symbols
+def clean_text(text):
+    # Check for NaN values
+    if pd.isnull(text):
+        return ""
+    
+    # Remove HTML tags
+    text = BeautifulSoup(text, 'html.parser').get_text()
 
-    df['target'] = df['target'].apply(clean_text)
+    # Remove non-alphabetic characters
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
 
-    # Tokenization: Break text into words
-    df['target'] = df['target'].apply(word_tokenize)
+    # Convert to lowercase
+    text = text.lower()
 
-    # Handling Stop Words: Remove common words that do not contribute much to the meaning
-    stop_words = set(stopwords.words('english'))
+    return text
 
-    def remove_stopwords(tokens):
-        return [word for word in tokens if word.lower() not in stop_words]
+# Apply text cleaning to the desired column (replace 'content' with your actual column name)
+df['content'] = df['content'].apply(clean_text)
 
-    # Join the lists of tokens back into strings
-    df['target'] = df['target'].apply(lambda x: ' '.join(x))
+# Tokenization: Break text into words
+df['content'] = df['content'].apply(word_tokenize)
 
-    # Apply stop words removal
-    df['target'] = df['target'].apply(remove_stopwords)
+# Stopword Removal: Remove common words that don't contribute much to the classification
+stop_words = set(stopwords.words('english'))
 
-    # Save the preprocessed data to a new CSV file
-    df.to_csv('preprocessed_text_data.csv', index=False)
+def remove_stopwords(tokens):
+    return [word for word in tokens if word.lower() not in stop_words]
 
-    # Display the first few rows of the preprocessed dataframe
-    print("\nPreprocessed Text Data:")
-    print(df)
-else:
-    print("The 'target' column does not exist in the dataframe.")
+df['content'] = df['content'].apply(remove_stopwords)
 
+# Save the preprocessed data to a new CSV file
+df.to_csv('preprocessed_data.csv', index=False)
 
-# %%
+# Display the first few rows of the preprocessed dataframe
+print("\nPreprocessed Data:")
+print(df.head())
