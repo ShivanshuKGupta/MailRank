@@ -35,20 +35,20 @@ if 'target' in df.columns:
     # Tokenization: Break text into words
     df['target'] = df['target'].apply(word_tokenize)
 
-# Stopword Removal: Remove common words that don't contribute much to the classification
-stop_words = set(stopwords.words('english'))
+    # Stopword Removal: Remove common words that don't contribute much to the classification
+    stop_words = set(stopwords.words('english'))
 
-def remove_stopwords(tokens):
-    return [word for word in tokens if word.lower() not in stop_words]
+    def remove_stopwords(tokens):
+        return [word for word in tokens if word.lower() not in stop_words]
 
-    # Join the lists of tokens back into strings
-    df['target'] = df['target'].apply(lambda x: ' '.join(x))
+        # Join the lists of tokens back into strings
+        df['target'] = df['target'].apply(lambda x: ' '.join(x))
 
-    # Apply stop words removal
-    df['target'] = df['target'].apply(remove_stopwords)
+        # Apply stop words removal
+        df['target'] = df['target'].apply(remove_stopwords)
 
-# Save the preprocessed data to a new CSV file
-df.to_csv('preprocessed_data.csv', index=False)
+    # Save the preprocessed data to a new CSV file
+    df.to_csv('preprocessed_data.csv', index=False)
 
     # Display the first few rows of the preprocessed dataframe
     print("\nPreprocessed Text Data:")
