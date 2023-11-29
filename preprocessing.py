@@ -19,7 +19,7 @@ print(df.head())
 
 def clean_text(text):
     if pd.isnull(text):
-        return ""
+        return "NULL"
     text = str(text)
     text = re.sub(r'[^a-zA-Z0-9\s]', '', text, re.I | re.A)
     text = text.lower()
