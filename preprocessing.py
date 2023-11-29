@@ -20,7 +20,7 @@ for col_name in df.columns.drop('target'):
     def clean_text(text):
         if pd.isnull(text):
             return ""
-        text = str(text)
+        text = str(text)1
         text = re.sub(r'[^a-zA-Z\s]', '', text, re.I | re.A)  # Remove non-alphabetic characters
         text = text.lower()  # Convert to lowercase
         return text
