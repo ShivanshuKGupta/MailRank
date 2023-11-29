@@ -72,3 +72,7 @@ print("Classification Report:\n", classification_report(
 
 # %%
 generate_report(y_test_decoded, y_pred_decoded, "GRU")
+
+
+# %%
+model.save('gru_model.h5')
