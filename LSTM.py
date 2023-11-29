@@ -2,7 +2,7 @@
 # Feature Extraction
 # %%
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.layers import Dense, Embedding, LSTM, GRU, Bidirectional
+from tensorflow.keras.layers import Dense, LSTM
 from tensorflow.keras.models import Sequential
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, classification_report

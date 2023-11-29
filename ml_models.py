@@ -63,16 +63,10 @@ rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_classifier.fit(X_train_tfidf, y_train)
 y_pred_rf = rf_classifier.predict(X_test_tfidf)
 
-# Decision Tree
-dt_classifier = DecisionTreeClassifier(random_state=42)
-dt_classifier.fit(X_train_tfidf, y_train)
-y_pred_dt = dt_classifier.predict(X_test_tfidf)
-
 # Decode labels if needed
 y_test_decoded = label_encoder.inverse_transform(y_test)
 y_pred_svm_decoded = label_encoder.inverse_transform(y_pred_svm)
 y_pred_rf_decoded = label_encoder.inverse_transform(y_pred_rf)
-y_pred_dt_decoded = label_encoder.inverse_transform(y_pred_dt)
 
 # Evaluate performance
 print("Support Vector Machine:")
