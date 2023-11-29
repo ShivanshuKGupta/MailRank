@@ -1,15 +1,14 @@
 # %%
-from nltk.stem import PorterStemmer
+import pandas as pd
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk.corpus import stopwords
+import nltk
 import pandas as pd
 
-df = pd.read_csv('preprocessed_text_data.csv')
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 
-
-def apply_stemming(txt):
-    words = txt.split()
-
-
-stemmer = PorterStemmer()
-stemmed_words = [stemmer.stem(word) for word in words]
-
-stemmed_words
+# %%
+df = pd.read_csv('preprocessed_data.csv')
