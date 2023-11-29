@@ -8,6 +8,7 @@ from nltk.stem import PorterStemmer, WordNetLemmatizer
 
 nltk.download('punkt')
 nltk.download('stopwords')
+nltk.download('wordnet')
 
 # %%
 df = pd.read_csv('data.csv')
@@ -38,11 +39,6 @@ for col_name in df.columns.drop(['target', 'sender_email']):
 
     print("\nPreprocessed Text Data:")
     print(df)
-
-# %%
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
 
 # %%
 df = pd.read_csv('preprocessed_data.csv')
@@ -80,7 +76,8 @@ for column in columns_to_preprocess:
 
 def remove_braces(txt):
     print(f"{txt=}")
-    if (not isinstance(txt, str) or txt.count('<') == 0):
+    print(f"{type(txt)=}")
+    if ((not isinstance(txt, str)) or txt.count('<') == 0):
         return txt
     txt = txt.replace('<', '')
     txt = txt.replace('>', '')
@@ -89,3 +86,4 @@ def remove_braces(txt):
 
 df['sender_email'] = df['sender_email'].apply(remove_braces)
 df.to_csv('preprocessed_data.csv')
+df = df.fillna("null")
