@@ -6,9 +6,9 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 
-# nltk.download('punkt')
-# nltk.download('stopwords')
-# nltk.download('wordnet')
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 
 # %%
 df = pd.read_csv('data.csv')
@@ -73,11 +73,12 @@ for column in columns_to_preprocess:
 
 
 def remove_braces(txt):
-    print(f"{txt=}")
-    print(f"{type(txt)=}")
+    # print(f"{txt=}")
+    # print(f"{type(txt)=}")
     return str(txt).replace('<', '').replace('>', '')
 
 
 df['sender_email'] = df['sender_email'].apply(remove_braces)
 # df = df.fillna("null")
 df.to_csv('preprocessed_data.csv', index=False)
+print("Preprocessed Data is written to 'preprocessed_data.csv'")

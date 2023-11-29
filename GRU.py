@@ -1,4 +1,5 @@
 # %%
+from analysis import generate_report, save_model
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import SelectKBest, chi2
@@ -16,7 +17,7 @@ df['heading'].fillna('', inplace=True)
 df['sender_name'].fillna('', inplace=True)
 df['target'].fillna(0, inplace=True)
 
-X = df['content']
+X = df['content']+' '+df['heading']
 y = df['target']
 # %%
 # TF-IDF vectorization
@@ -69,3 +70,6 @@ y_pred_decoded = label_encoder.inverse_transform(y_pred)
 print("Accuracy:", accuracy_score(y_test_decoded, y_pred_decoded))
 print("Classification Report:\n", classification_report(
     y_test_decoded, y_pred_decoded))
+
+# %%
+generate_report(y_test_decoded, y_pred_decoded, "GRU")

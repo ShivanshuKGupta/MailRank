@@ -1,6 +1,7 @@
 # %%
 # Feature Extraction
 # %%
+from analysis import generate_report, save_model
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.layers import Dense, LSTM
 from tensorflow.keras.models import Sequential
@@ -63,7 +64,4 @@ y_test_decoded = label_encoder.inverse_transform(y_test)
 y_pred_decoded = label_encoder.inverse_transform(y_pred)
 
 # %%
-# Print accuracy and classification report
-print("Accuracy:", accuracy_score(y_test_decoded, y_pred_decoded))
-print("Classification Report:\n", classification_report(
-    y_test_decoded, y_pred_decoded))
+generate_report(y_test_decoded, y_pred_decoded, "LSTM")
