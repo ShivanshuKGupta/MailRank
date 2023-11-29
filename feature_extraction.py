@@ -21,7 +21,6 @@ X = tfidf.fit_transform(X).toarray()
 print(f"{X=}")
 
 # 3.1.3. Word Embeddings
-# loading the pre-trained word embeddings
 embeddings_index = {}
 with open('glove.6B.100d.txt', encoding='utf8') as f:
     for line in f:
