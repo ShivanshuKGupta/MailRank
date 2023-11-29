@@ -1,30 +1,30 @@
 # %%
-
 import pandas as pd
 import re
-from bs4 import BeautifulSoup
+import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
-import nltk
 nltk.download('punkt')
 nltk.download('stopwords')
 
-file_path = 'data.csv'
-df = pd.read_csv(file_path)
+# %%
+df = pd.read_csv('data.csv')
 
 print("Original Data:")
 print(df.head())
 
-for col_name in df.columns.drop('target'):
-    def clean_text(text):
-        if pd.isnull(text):
-            return ""
-        text = str(text)
-        text = re.sub(r'[^a-zA-Z\s]', '', text, re.I | re.A)  # Remove non-alphabetic characters
-        text = text.lower()  # Convert to lowercase
-        return text
 
+def clean_text(text):
+    if pd.isnull(text):
+        return ""
+    text = str(text)
+    text = re.sub(r'[^a-zA-Z0-9\s]', '', text, re.I | re.A)
+    text = text.lower()
+    return text
+
+
+for col_name in df.columns.drop(['target', 'sender_email']):
     df[col_name] = df[col_name].apply(clean_text)
     df[col_name] = df[col_name].apply(word_tokenize)
     stop_words = set(stopwords.words('english'))

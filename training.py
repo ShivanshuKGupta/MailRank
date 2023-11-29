@@ -14,27 +14,44 @@ nltk.download('wordnet')
 df = pd.read_csv('preprocessed_data.csv')
 
 
-def preprocess_text(text):
-    # tokens = word_tokenize(text)
-    # stop_words = set(stopwords.words('english'))
-    # tokens = [word for word in tokens if word.lower() not in stop_words]
+stemmer = PorterStemmer()
+lemmatizer = WordNetLemmatizer()
 
-    print(f"{text=}")
-    tokens = text
-    print(f"{tokens=}")
-    stemmer = PorterStemmer()
+
+def preprocess_text(tokens):
+    tokens = tokens.replace('[', '')
+    tokens = tokens.replace(']', '')
+    tokens = tokens.replace('\'', '')
+    tokens = tokens.replace(',', '')
+    tokens = tokens.split(' ')
+    # print(f"{tokens=}")
+
     stemmed_words = [stemmer.stem(word) for word in tokens]
+    # print(f"{stemmed_words=}")
 
-    lemmatizer = WordNetLemmatizer()
     lemmatized_words = [lemmatizer.lemmatize(word) for word in stemmed_words]
+    # print(f"{lemmatized_words=}")
 
     preprocessed_text = ' '.join(lemmatized_words)
+    # print(f"{preprocessed_text=}")
+
     return preprocessed_text
 
 
-columns_to_preprocess = df.columns.drop('target')
+columns_to_preprocess = df.columns.drop(['target', 'sender_email'])
 
 for column in columns_to_preprocess:
     df[column] = df[column].apply(preprocess_text)
 
-# df
+
+def remove_braces(txt):
+    print(f"{txt=}")
+    if (not isinstance(txt, str) or txt.count('<') == 0):
+        return txt
+    txt = txt.replace('<', '')
+    txt = txt.replace('>', '')
+    return txt
+
+
+df['sender_email'] = df['sender_email'].apply(remove_braces)
+df
