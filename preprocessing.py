@@ -6,9 +6,9 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('wordnet')
+# nltk.download('punkt')
+# nltk.download('stopwords')
+# nltk.download('wordnet')
 
 # %%
 df = pd.read_csv('data.csv')
@@ -19,7 +19,7 @@ print(df.head())
 
 def clean_text(text):
     if pd.isnull(text):
-        return "NULL"
+        return ""
     text = str(text)
     text = re.sub(r'[^a-zA-Z0-9\s]', '', text, re.I | re.A)
     text = text.lower()
@@ -35,10 +35,6 @@ for col_name in df.columns.drop(['target', 'sender_email']):
         return [word for word in tokens if word.lower() not in stop_words]
 
     df[col_name] = df[col_name].apply(remove_stopwords)
-    df.to_csv('preprocessed_data.csv', index=False)
-
-    print("\nPreprocessed Text Data:")
-    print(df)
 
 # %%
 df = pd.read_csv('preprocessed_data.csv')
@@ -49,6 +45,8 @@ lemmatizer = WordNetLemmatizer()
 
 
 def preprocess_text(tokens):
+    if pd.isna(tokens):
+        return ""
     tokens = tokens.replace('[', '')
     tokens = tokens.replace(']', '')
     tokens = tokens.replace('\'', '')
@@ -77,13 +75,9 @@ for column in columns_to_preprocess:
 def remove_braces(txt):
     print(f"{txt=}")
     print(f"{type(txt)=}")
-    if ((not isinstance(txt, str)) or txt.count('<') == 0):
-        return txt
-    txt = txt.replace('<', '')
-    txt = txt.replace('>', '')
-    return txt
+    return str(txt).replace('<', '').replace('>', '')
 
 
 df['sender_email'] = df['sender_email'].apply(remove_braces)
-df.to_csv('preprocessed_data.csv')
-df = df.fillna("null")
+# df = df.fillna("null")
+df.to_csv('preprocessed_data.csv', index=False)

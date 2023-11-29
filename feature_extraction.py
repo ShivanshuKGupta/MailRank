@@ -11,7 +11,7 @@ data = pd.read_csv('preprocessed_data.csv')
 # %%
 # creating a bag of words model
 cv = CountVectorizer()
-X = cv.fit_transform(data['content']).toarray()
+X = cv.fit_transform(data['heading']).toarray()
 y = data['target'].values
 
 # 3.1.2. TF-IDF
