@@ -32,6 +32,5 @@ def generate_report(y_test, y_pred, title):
     print(f"----------------------------------------------")
 
 
-
 def save_model(model, file_name: str = "saved_model"):
     pickle.dump(model, open(file_name, 'wb'))

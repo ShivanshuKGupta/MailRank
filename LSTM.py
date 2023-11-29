@@ -20,7 +20,7 @@ df['heading'].fillna('', inplace=True)
 df['sender_name'].fillna('', inplace=True)
 df['target'].fillna(0, inplace=True)
 
-X = df['content'] + ' ' + df['heading']
+X = df['content']
 print(f"{X=}")
 y = df['target']
 print(f"{y=}")
@@ -30,36 +30,33 @@ tfidf_vectorizer = TfidfVectorizer(max_features=5000)
 X_tfidf = tfidf_vectorizer.fit_transform(X)
 print(f"{X_tfidf=}")
 
-# %%
-X_lstm = X_tfidf.toarray().reshape(
-    X_tfidf.shape[0], 1, X_tfidf.shape[1])
+num_features_to_select = 1000
+selector = SelectKBest(chi2, k=num_features_to_select)
+X_selected = selector.fit_transform(X_tfidf, y)
 
-# Encode labels
+# %%
+X_lstm = X_selected.toarray().reshape(
+    X_selected.shape[0], 1, X_selected.shape[1])
+
 label_encoder = LabelEncoder()
 y_encoded = label_encoder.fit_transform(y)
 
-# Split the dataset
 X_train, X_test, y_train, y_test = train_test_split(
     X_lstm, y_encoded, test_size=0.2, random_state=42)
 
-# Build LSTM model
 model = Sequential()
 model.add(LSTM(100, input_shape=(X_lstm.shape[1], X_lstm.shape[2])))
 model.add(Dense(1, activation='sigmoid'))
 
-# Compile the model
 model.compile(optimizer=Adam(learning_rate=0.001),
               loss='binary_crossentropy', metrics=['accuracy'])
 
-# Train the model
 model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.2)
 
 # %%
-# Evaluate on the test set
 y_pred_proba = model.predict(X_test)
 y_pred = (y_pred_proba > 0.5).astype(int)
 
-# Decode labels if needed
 y_test_decoded = label_encoder.inverse_transform(y_test)
 y_pred_decoded = label_encoder.inverse_transform(y_pred)
 

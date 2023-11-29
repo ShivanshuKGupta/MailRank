@@ -10,21 +10,20 @@ from tensorflow.keras.layers import Embedding, GRU, Dense
 from tensorflow.keras.optimizers import Adam
 from sklearn.metrics import accuracy_score, classification_report
 
-# Load preprocessed data
 df = pd.read_csv('preprocessed_data.csv')
 df['content'].fillna('', inplace=True)
 df['heading'].fillna('', inplace=True)
 df['sender_name'].fillna('', inplace=True)
 df['target'].fillna(0, inplace=True)
 
-X = df['content']+' '+df['heading']
+print(f"{df=}")
+print(f"{df.axes=}")
+X = df['content']
 y = df['target']
 # %%
-# TF-IDF vectorization
 tfidf_vectorizer = TfidfVectorizer(max_features=5000)
 X_tfidf = tfidf_vectorizer.fit_transform(X)
 
-# Feature selection
 num_features_to_select = 1000
 selector = SelectKBest(chi2, k=num_features_to_select)
 X_selected = selector.fit_transform(X_tfidf, y)
@@ -42,7 +41,7 @@ y_encoded = label_encoder.fit_transform(y)
 
 # Split the dataset
 X_train, X_test, y_train, y_test = train_test_split(
-    X_gru, y_encoded, test_size=0.2, random_state=42)
+    X_gru, y_encoded, test_size=0.2, random_state=20)
 
 # Build GRU model
 model = Sequential()
