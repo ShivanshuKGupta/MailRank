@@ -54,4 +54,4 @@ def remove_braces(txt):
 
 
 df['sender_email'] = df['sender_email'].apply(remove_braces)
-df
+df.to_csv('prerocessed_data.csv')
